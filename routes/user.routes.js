@@ -5,7 +5,7 @@ const userController = require("../controllers/user.controller");
 const authMiddleware = require("../middleware/auth.middleware.js")
 const {authUser}= require("../middleware/auth.middleware.js")
 const {getallusers} = require('../controllers/getuser.controller')
-
+const getalluserController = require("./controllers/getuser.controller.js")
 
 
 
@@ -29,6 +29,6 @@ userController.loginUser
 ,
 )
 router.get("/api/profile",authMiddleware.authUser,userController.getUserProfile)
-router.get("/api/getall",authMiddleware.authUser,getallusers)
+router.get("/api/getall",authMiddleware.authUser,getalluserController.getallusers)
 
 module.exports = router;
