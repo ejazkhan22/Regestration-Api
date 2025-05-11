@@ -28,14 +28,16 @@ if (require.main === module) {
 app.use(express.json());
 app.use(cookieParser());
 app.use(express.urlencoded({ extended: true }));
-app.use(cors()); // ✅ Allow all origins
+app.use(cors()); // 
 
 // Or more securely:
-app.use(cors({ origin: '*' }));
+app.use(cors({ origin: '*' ,  credentials: true}));
 
 // Routes
+app.get('/', (req, res) => res.send('Hello World!'));
 app.get('/health', (req, res) => res.json({ ok: true }));
 app.use("/users", userRoutes);
+
 
 // DB Connection
 connectDB();
