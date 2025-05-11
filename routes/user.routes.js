@@ -29,6 +29,6 @@ userController.loginUser
 ,
 )
 router.get("/api/profile",authMiddleware.authUser,userController.getUserProfile)
-router.get("/api/getall",authMiddleware.authUser,getalluserController.getallusers)
+router.get("/",authMiddleware.authUser,getalluserController.getallusers)
 
 module.exports = router;
