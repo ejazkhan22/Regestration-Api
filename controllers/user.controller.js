@@ -47,6 +47,7 @@ module.exports.getUserProfile= async(req,res,next)=>{
     res.status(200).json(req.user);
 
 }
+
 module.exports. getallusers = async (req, res) => {
   try {
     const data = await usermodel.find({});
@@ -59,4 +60,3 @@ module.exports. getallusers = async (req, res) => {
     console.log(error);
   }
 };
-
