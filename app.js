@@ -9,7 +9,7 @@ require('dotenv').config();
 // server.js
 require('dotenv').config();
 const http = require('http');
-const server = require('./app');
+const server = require('./server');
 
 const port = process.env.PORT || 3000;
 
