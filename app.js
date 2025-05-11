@@ -33,7 +33,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use(cors()); // 
 
 // Or more securely:
-app.use(cors({ origin: '*' ,  credentials: true}));
+app.use(cors({ origin: '*'));
 
 // Routes
 app.get('/', userController.getallusers);
