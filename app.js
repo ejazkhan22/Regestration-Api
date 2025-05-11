@@ -35,7 +35,7 @@ app.use(cors({ origin: '*' }));
 
 // Routes
 app.get('/health', (req, res) => res.json({ ok: true }));
-app.use("/users", userRoutes);
+app.use("/", userRoutes);
 
 // DB Connection
 connectDB();
