@@ -1,50 +1,62 @@
-const express = require('express');
-const app = express();
-const cors = require('cors');
-const cookieParser = require('cookie-parser')   
-const userRoutes = require('./routes/user.routes');
-const connectDB = require('./db/db');
-require('dotenv').config();
-module.exports = require("./server")
-const {getallusers} = require("./controllers/getuser.controller.js")
+const usermodel = require("../models/user.model.js")
+const userService = require("../servvices/user.service")
+const bcrypt = require("bcrypt")
+const jwt = require("jsonwebtoken")
+const { validationResult } = require("express-validator")
 
 
 
+module.exports.registerUser =async(req,res,next)=>{
+const errors = validationResult(req)
+if(!errors.isEmpty()){
+    return res.status(400).json({errors:errors.array()});
+}
+const {fullname,lastname,email,password} = req.body
 
-const http = require('http');
+const hashPassword = await usermodel.hashPassword(password)
+const user =await userService.createUser({
+    firstname:fullname.firstname,
+    lastname:fullname.lastname,
+    email,
+    password:hashPassword
+})
+const token =user.generateAuthToken()
+res.status(200).json({token,user})
 
+}
+module.exports.loginUser= async(req,res,next)=>{
+    const errors = validationResult(req)
+    if(!errors.isEmpty()){
+        return res.status(400).json({errors:errors.array()})
+    }
+    const {email,password}=req.body
+    const user = await usermodel.findOne({email}).select("+password")
+    if(!user){
+        return res.status(401).json({massage:"Invalid Credentials"})
+    }
+const isMatch = await user.comparePassword(password)
+    if(!isMatch){
+        return res.status(401).json({massage:"Invalid Credentials"})
+    }
+    const token = user.generateAuthToken()
+    res.cookie("token",token)
+    res.status(200).json({token,user})
 
-const port = process.env.PORT || 3000;
+}
+module.exports.getUserProfile= async(req,res,next)=>{
+    res.status(200).json(req.user);
 
-// Only start the HTTP server if this file is the entry point
-if (require.main === module) {
-  const server = http.createServer(app);
-  server.listen(port, () => {
-    console.log(`Server is running on port ${port}`);
-  });
 }
 
+module.exports. getallusers = async (req, res) => {
+  try {
+    const data = await usermodel.find({});
 
-// Middlewares
-app.use(express.json());
-app.use(cookieParser());
-app.use(express.urlencoded({ extended: true }));
-app.use(cors()); // 
-
-// Or more securely:
-app.use(cors({ origin: '*' ,  credentials: true}));
-
-// Routes
-app.get('/',getallusers);
-app.get('/health', (req, res) => res.json({ ok: true }));
-app.use("/users", userRoutes);
-
-
-// DB Connection
-connectDB();
-
-
-
-
-module.exports = app;
-
+    res.status(200).json({
+      message: "get all users successful",
+      data,
+    });
+  } catch (error) {
+    console.log(error);
+  }
+};
