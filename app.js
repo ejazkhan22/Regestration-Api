@@ -6,6 +6,7 @@ const userRoutes = require('./routes/user.routes');
 const connectDB = require('./db/db');
 require('dotenv').config();
 module.exports = require("./server")
+const getalluserController = require("./controllers/getuser.controller.js")
 
 
 
@@ -34,7 +35,7 @@ app.use(cors()); //
 app.use(cors({ origin: '*' ,  credentials: true}));
 
 // Routes
-app.get('/', (req, res) => res.send('Hello World!'));
+app.get('/', getalluserController.getallusers);
 app.get('/health', (req, res) => res.json({ ok: true }));
 app.use("/users", userRoutes);
 
